@@ -1,0 +1,14 @@
+{
+    "logServerity": "info",
+    "app": {
+        "externalAPITimeout" : 5000
+    },
+    "url": {
+        "userapi" : "https://reqres.in/api"
+    },
+    "db" : {
+        "mongodb" : {
+            "url" : "https://localhost:27017/transactiondb"
+        }
+    }
+}

@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
-
 const mongoConnect = (mongoURL) => {
-    debugger
     mongoose.connect(mongoURL, { 
         useNewUrlParser: true,
         useUnifiedTopology: true

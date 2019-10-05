@@ -11,10 +11,10 @@ const getRequest = async ({url, options}) => {
             },
             data: {},
         };
-       const res = await axios.get('https://reqres.in/api/users?page=1', config);
+       const res = await axios.get(url, config);
        //res.then(response => console.log("---"+response.data));
-       console.log(res.data);
-        return stringify(res.data);
+       console.log(res.data[0]);
+       return res.data[0];
    } catch(err) {
         console.log(err);
    }
@@ -25,8 +25,4 @@ const getRequest = async ({url, options}) => {
 module.exports.autoload = true
 module.exports = {
     getRequest
-}
-
-function newFunction(url) {
-    console.log(`-----***************************----${url}`);
 }

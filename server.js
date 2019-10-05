@@ -45,7 +45,7 @@ const createServer = (option) => {
     });
 
     // start the server
-    server.listen(9000, (err) => {
+    server.listen(8000, (err) => {
         if (err) {
             server.log.error(err);
             console.log(err);

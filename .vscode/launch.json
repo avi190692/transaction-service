@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/app.js",
             "runtimeArgs": ["--nolazy"],
             "env": {
-                "APP_SETTINGS_FILE_PATH": "${cwd}/config/settings.json"
+                "SETTINGS": "${cwd}/config/settings.json"
             }
         }
     ]

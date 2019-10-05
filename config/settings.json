@@ -3,12 +3,22 @@
     "app": {
         "externalAPITimeout" : 5000
     },
-    "url": {
-        "userapi" : "https://reqres.in/api"
+    "services-url": {
+        "account-service" : {
+            "find" : {
+                "byAccountNo" : "http://localhost:9000/account/"
+            }
+        }
     },
     "db" : {
         "mongodb" : {
-            "url" : "https://localhost:27017/transactiondb"
+            "url" : "mongodb://localhost:27017/transactiondb"
+        }
+    },
+    "kafka" : {
+        "server" : "localhost:2181",
+        "topics" : {
+            "credit-debit" : "credit-debit"
         }
     }
 }

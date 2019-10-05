@@ -1,10 +1,8 @@
-const { getUsersCtrl, registerUserCtrl, findUserByNameCtrl  } = require('../controllers/userController');
+const { doTransactionCtrl  } = require('../controllers/TransactionController');
 const { validatePostSignup } = require('../validations/auth');
 
 module.exports = async (fastify) => {
-    fastify.get('/users', getUsersCtrl)
-    fastify.post('/auth/signup', registerUserCtrl);
-    fastify.get('/users/:email', findUserByNameCtrl)
+    fastify.post('/transaction', doTransactionCtrl);
 } 
 
 

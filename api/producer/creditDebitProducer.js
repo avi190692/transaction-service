@@ -1,5 +1,6 @@
 const { KafkaClient , Producer } = require('kafka-node');
 const nconf = require('nconf');
+const { listenTransactionStatus } = require('../listeners/transactionStatusListener');
 
 const client = new KafkaClient(nconf.get('kafka.server'));
 producer = new Producer(client);

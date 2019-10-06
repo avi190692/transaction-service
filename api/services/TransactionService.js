@@ -1,4 +1,4 @@
-const Transaction = require('../models/Transaction');
+const { Transaction, TrnsactionStatus } = require('../models/Transaction');
 
 const updateTransaction = async (transaction) => {
     await Transaction.findByIdAndUpdate(

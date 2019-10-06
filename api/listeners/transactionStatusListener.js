@@ -1,13 +1,12 @@
 const kafka = require('kafka-node')
 const nconf = require('nconf');
-const Transaction = require('../models/Transaction');
+const { Transaction, TrnsactionStatus } = require('../models/Transaction');
 const { updateTransaction } = require('../services/TransactionService');
 const Consumer = kafka.Consumer;
 const Client = kafka.KafkaClient;
 const client = new Client(nconf.get('kafka.server'));
 
-
-const listenDebitCreditTransaction = new Consumer(
+const listenTransactionStatus = new Consumer(
     client,
     [{ topic: nconf.get('kafka.topics.transaction-status-update') }],
     {
@@ -19,33 +18,36 @@ const listenDebitCreditTransaction = new Consumer(
     }
 );
 
-console.log(nconf.get('kafka.topics.transaction-status-update') +' is listening');
+console.log(nconf.get('kafka.topics.transaction-status-update') +' is listening' + ' in server ' + nconf.get('kafka.server'));
 
-listenDebitCreditTransaction.on('message', async function(message) {
-    handleMessage(message)
+listenTransactionStatus.on('message', async function(message) {
+    await handleMessage(message)
 });
 
-listenDebitCreditTransaction.on('error', function(err) {
+listenTransactionStatus.on('error', function(err) {
+    debugger
     console.log('error'+ err);
 });
 
 async function handleMessage(message) {
     try {
         const updatedTransaction = JSON.parse(message.value);
-        let account = new Transaction({
-            "id" : updatedTransaction.trnsactionId,
-            "transactionType" : updatedTransaction.transactionType
-            "transactionStatus" : updatedTransaction.transactionStatus
-        });
-        account = await updateAccount(account);
-        const trnsactionId = JSON.parse(message.value).trnsactionId;
-        const transactionType = JSON.parse(message.value).transactionType;
-        const transactionStatusUpdation = { 
-            "trnsactionId" : trnsactionId,  
-            "transactionType" : transactionType,
-            "transactionStatus" : "PASSED"
+        const transactions = await Transaction.where('_id',updatedTransaction.trnsactionId);
+        let transaction = transactions[0];
+        if (updatedTransaction.transactionType === 'Debit') {
+            if (TrnsactionStatus.PASSED === updatedTransaction.transactionStatus) {
+                transaction.debitStatus = TrnsactionStatus.PASSED;
+            } else if (TrnsactionStatus.FAILED === updatedTransaction.transactionStatus) {
+                transaction.debitStatus = TrnsactionStatus.FAILED;
+            }
+        } else if (updatedTransaction.transactionType === 'Credit') {
+            if (TrnsactionStatus.PASSED === updatedTransaction.transactionStatus) {
+                transaction.creditStatus = TrnsactionStatus.PASSED;
+            } else if (TrnsactionStatus.FAILED === updatedTransaction.transactionStatus) {
+                transaction.creditStatus = TrnsactionStatus.FAILED;
+            }            
         }
-        await publishTransactionUpdateMessage(transactionStatusUpdation);
+        transaction = await updateTransaction(transaction);
     } catch (err) {
         console.log(err)
     }  

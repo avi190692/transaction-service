@@ -3,7 +3,6 @@ const server = require('./server');
 const loadSettings = require('./config/configurationAdaptor');
 const { mongoConnect  } = require('./api/db/db');
 
-
 const appSettingsPath = process.env.SETTINGS;
 console.log("Setting file with name = " + appSettingsPath)
 loadSettings({appSettingsPath}).then(() => {

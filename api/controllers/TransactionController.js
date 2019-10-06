@@ -9,15 +9,13 @@ const doTransactionCtrl = async (req, reply) => {
     try{
         transaction.debitStatus = TrnsactionStatus.PENDING;
         transaction.creditStatus = TrnsactionStatus.PENDING;
-        debugger
         transaction = await transaction.save();
         const accountFrom = await findAccount(req.body.accountFrom);
         const accountTo = await findAccount(req.body.accountTo);
         accountFrom.balanceAmount = accountFrom.balanceAmount - req.body.amountTransfer;
-        accountTo.balanceAmount = accountTo.balanceAmountz + req.body.amountTransfer;
+        accountTo.balanceAmount = accountTo.balanceAmount + req.body.amountTransfer;
         const debitMessage = {"trnsactionId" : transaction.id,  "transactionType" : "Debit" , "accountUpdate" : accountFrom}
         const creditMessage = {"trnsactionId" : transaction.id, "transactionType" : "Credit" , "accountUpdate" : accountTo}
-        debugger
         await publishCreditDebitMessage(creditMessage).catch((err) =>{
             throw err;
         });

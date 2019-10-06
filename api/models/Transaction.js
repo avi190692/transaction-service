@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const validator = require('validator')
 
 const TrnsactionStatus = Object.freeze({
-    PASSED: 'pass',
-    PENDING: 'pending',
-    FAILED: 'fail',
+    PASSED: 'PASSED',
+    PENDING: 'PENDING',
+    FAILED: 'FAILED',
 });
 
 const TransactionSchema = mongoose.Schema( {

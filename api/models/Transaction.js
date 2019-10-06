@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
 const validator = require('validator')
 
+const TrnsactionStatus = Object.freeze({
+    PASSED: 'pass',
+    PENDING: 'pending',
+    FAILED: 'fail',
+});
 
-const transactionSchema = mongoose.Schema( {
+const TransactionSchema = mongoose.Schema( {
     accountFrom: {
         type: Number,
         unique: true,
@@ -19,20 +24,27 @@ const transactionSchema = mongoose.Schema( {
         type: Number,
         required: true,
         trim: true,
+    }, 
+    status :  {
+        type: String,
+        enum: Object.values(TrnsactionStatus),
     }
 },
 {
         timestamps: true
 });
 
-transactionSchema.methods.toJSON = function () {
+TransactionSchema.methods.toJSON = function () {
     const transaction = this
     const transactionObject = transaction.toObject()
     return transaction
 }
 
 
+Object.assign(TransactionSchema.statics, {
+    TrnsactionStatus,
+});
 
-const transaction = mongoose.model('transaction', transactionSchema);
+const Transaction = mongoose.model('transaction', TransactionSchema);
 
-module.exports = transaction;
+module.exports = { Transaction, TrnsactionStatus };

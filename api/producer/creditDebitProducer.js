@@ -1,4 +1,4 @@
-const { KafkaClient , Producer, ProduceRequest } = require('kafka-node');
+const { KafkaClient , Producer } = require('kafka-node');
 const nconf = require('nconf');
 
 const client = new KafkaClient(nconf.get('kafka.server'));
@@ -14,12 +14,16 @@ producer.on('error', function (err) {
     console.error(`Problem with creditDebit Kafka message ${err}`);
 })
 
-const publishCreditDebitMessage = ( message ) => { 
+const publishCreditDebitMessage = async ( message ) => { 
     payloads = [
         { topic: nconf.get('kafka.topics.credit-debit') , messages: JSON.stringify(message) }
     ];
     if (creditDebitProducerReady) {
-        producer.send(payloads, function (err, data) {
+        await producer.send(payloads, function (err, data) {
+            if (err) {
+                console.log(`Error to send message in credit debit Topic ${err}`);
+                throw err;
+            }
             console.log(data);
         });
     } else {

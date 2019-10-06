@@ -18,7 +18,8 @@
     "kafka" : {
         "server" : "localhost:2181",
         "topics" : {
-            "credit-debit" : "credit-debit"
+            "credit-debit" : "credit-debit",
+            "transaction-status-update" : "transaction-status-update"
         }
     }
 }

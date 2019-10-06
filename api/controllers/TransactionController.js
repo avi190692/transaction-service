@@ -5,16 +5,26 @@ const stringify = require('json-stringify-safe')
 const { publishCreditDebitMessage } = require('../producer/creditDebitProducer');
 
 const doTransactionCtrl = async (req, reply) => {
-    const transaction = new Transaction(req.body);
+    let transaction = new Transaction(req.body);
     try{
-        debugger        
-        transaction.status = TrnsactionStatus.PENDING;
-        await transaction.save();
+        transaction.debitStatus = TrnsactionStatus.PENDING;
+        transaction.creditStatus = TrnsactionStatus.PENDING;
+        debugger
+        transaction = await transaction.save();
         const accountFrom = await findAccount(req.body.accountFrom);
-        await publishCreditDebitMessage(accountFrom).catch((err) =>{
+        const accountTo = await findAccount(req.body.accountTo);
+        accountFrom.balanceAmount = accountFrom.balanceAmount - req.body.amountTransfer;
+        accountTo.balanceAmount = accountTo.balanceAmountz + req.body.amountTransfer;
+        const debitMessage = {"trnsactionId" : transaction.id,  "transactionType" : "Debit" , "accountUpdate" : accountFrom}
+        const creditMessage = {"trnsactionId" : transaction.id, "transactionType" : "Credit" , "accountUpdate" : accountTo}
+        debugger
+        await publishCreditDebitMessage(creditMessage).catch((err) =>{
             throw err;
-       });
-        return accountFrom;
+        });
+        await publishCreditDebitMessage(debitMessage).catch((err) =>{
+            throw err;
+        });
+        return {"message": 'Transaction is in process'};
     } catch(err) {
         transaction.status = TrnsactionStatus.FAILED;
         transaction.save();

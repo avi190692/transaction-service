@@ -5,9 +5,7 @@ const findAccountByAccountNumber = nconf.get('services-url.account-service.find.
 
 const findAccount = async (accountnumber) => {
     const url = joinUrl(findAccountByAccountNumber, accountnumber);
-   let account = await getRequest( {url: url} );
-   account.balanceAmount = account.balanceAmount - 50;
-   return account;
+    return await getRequest( {url: url} );
 }
 
 module.exports = {

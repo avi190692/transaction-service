@@ -10,24 +10,31 @@ const TrnsactionStatus = Object.freeze({
 const TransactionSchema = mongoose.Schema( {
     accountFrom: {
         type: Number,
-        unique: true,
         required: true,
         trim: true,
+        unique: false
     },
     accountTo: {
         type: Number,
-        unique: true,
         required: true,
         trim: true,
+        unique: false
     },
     amountTransfer: {
         type: Number,
         required: true,
         trim: true,
+        unique: false
     }, 
-    status :  {
+    debitStatus :  {
         type: String,
         enum: Object.values(TrnsactionStatus),
+        unique: false
+    },
+    creditStatus :  {
+        type: String,
+        enum: Object.values(TrnsactionStatus),
+        unique: false
     }
 },
 {

@@ -25,7 +25,6 @@ listenTransactionStatus.on('message', async function(message) {
 });
 
 listenTransactionStatus.on('error', function(err) {
-    debugger
     console.log('error'+ err);
 });
 
